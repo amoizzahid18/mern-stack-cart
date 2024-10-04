@@ -13,6 +13,7 @@ const DelProduct = () => {
   const [query, setQuery] = useState("");
   const [filteredProds, setFilteredProds] = useState([]);
   const [empty, setEmpty] = useState(false);
+  const [error, setError] = useState(false);
   const [product, setProduct] = useState({
     id: "",
     name: "",
@@ -25,11 +26,11 @@ const DelProduct = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/products");
+      const response = await axios.get("http://localhost:5500/api/products");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
+      const data = await response.data;
       if (data == null || data.length === 0) {
         setIsProdPres(false);
         setLoading(false);
@@ -55,7 +56,7 @@ const DelProduct = () => {
       e.preventDefault();
       setLoading(true);
       await axios.put(
-        `http://localhost:5000/api/products/product/${product.id}`,
+        `http://localhost:5500/api/products/product/${product.id}`,
         product
       );
       alert("Product edited successfully");
@@ -177,7 +178,7 @@ const DelProduct = () => {
                           ✕
                         </button>
 
-                        <h3 className=" text-4xl mb-12 mt-4">Edit Product</h3>
+                        <h3 className=" text-4xl mb-12 ">Edit Product</h3>
                         <div className="flex mx-2 items-center flex-wrap ">
                           <div className="font-bold w-full ml-1">NAME</div>
                           <label
@@ -250,7 +251,7 @@ const DelProduct = () => {
                             DESCRIPTION
                           </div>
                           <textarea
-                            className="textarea bg-gray-100 text-lg w-full mt-2 mb-6 text-black  rounded-3xl textarea-bordered"
+                            className="textarea bg-gray-100 text-lg w-full mt-2 mb-6 text-black  rounded-3xl "
                             placeholder="Product Description"
                             name="description"
                             onChange={handleChange}

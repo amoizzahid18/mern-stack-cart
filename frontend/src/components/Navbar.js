@@ -15,7 +15,7 @@ const Navbar = ({ isHome, isProdPres, updateBadge, name, setQuery }) => {
   const fetchTotalItems = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/products/cart/quantity"
+        "http://localhost:5500/api/products/cart/quantity"
       );
       setTotalItems(response.data.totalCount);
     } catch (error) {
@@ -55,11 +55,15 @@ const Navbar = ({ isHome, isProdPres, updateBadge, name, setQuery }) => {
                 placeholder="Search"
                 value={searchText}
                 onChange={handleSearch}
-                className="input input-bordered w-30 md:w-96"
+                className="input input-bordered w-30   md:w-96"
               />
             </div>
           )}
-
+          <input
+            type="checkbox"
+            value="dark"
+            className="toggle theme-controller"
+          />
           <div className="dropdown dropdown-end">
             <Link to="/cart">
               <div

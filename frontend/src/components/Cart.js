@@ -12,12 +12,16 @@ const Cart = () => {
   const [updCart, setUpdCart] = useState(false);
   const [butLoad, setButLoad] = useState(false);
   const [price, setPrice] = useState(0);
+  
 
   const getItems = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/products/cart");
-      const data = await response.json();
+      const response = await axios.get(
+        "http://localhost:5500/api/products/cart",
+        { timeout: 10000 }
+      );
+      const data = await response.data;
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -38,7 +42,7 @@ const Cart = () => {
     try {
       setButLoad(true);
       setLoading(true);
-      const res = await axios.delete("http://localhost:5000/api/products/cart");
+      const res = await axios.delete("http://localhost:5500/api/products/cart");
       if (res) {
         alert("Checkout Successful!");
         setButLoad(false);
@@ -87,7 +91,6 @@ const Cart = () => {
           !loading &&
           !isCartEmpty && (
             <div className="flex justify-center items-center  w-full  flex-col ">
-              
               <div className=" rounded-md  w-1/2">
                 <table className="table  shadow-xl">
                   <thead className="bg-gray-100">

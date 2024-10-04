@@ -24,8 +24,8 @@ const AddProduct = () => {
     try {
       e.preventDefault();
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:5000/api/products/addproduct",
+      await axios.post(
+        "http://localhost:5500/api/products/addproduct",
         product
       );
       setLoading(false);
@@ -59,8 +59,8 @@ const AddProduct = () => {
                 ✕
               </Link>
 
-              <h3 className=" text-4xl mb-12 mt-4">Add Product</h3>
-              <div className="flex mx-2 items-center flex-wrap ">
+              {/* <h3 className=" text-4xl mb-12 mt-4">Add Product</h3> */}
+              <div className="flex mx-2 items-center flex-wrap mt-6">
                 <div className="font-bold w-full ml-1">NAME</div>
                 <label
                   className="mt-2 mb-6 bg-gray-100 input rounded-full w-full flex items-center gap-2"
@@ -134,7 +134,7 @@ const AddProduct = () => {
                 <br />
                 <div className="font-bold w-full ml-1">DESCRIPTION</div>
                 <textarea
-                  className="textarea bg-gray-100 text-lg w-full mt-2 mb-6 text-black  rounded-3xl textarea-bordered"
+                  className="textarea bg-gray-100 text-lg w-full mt-2 mb-6 text-black  rounded-3xl "
                   placeholder="Product Description"
                   required
                   name="description"

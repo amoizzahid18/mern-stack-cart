@@ -15,7 +15,7 @@ const CartItem = ({
   setProduct,
   setUpdCart,
   setShowModel,
-  setUpProd,
+  setUpProd
 }) => {
   const [loading, setLoading] = useState(false);
 

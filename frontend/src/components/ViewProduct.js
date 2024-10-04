@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 function ViewProduct() {
   const { id } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/products/product/${id}`
+      const response = await axios.get(
+        `http://localhost:5500/api/products/product/${id}`
       );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+     
+      const data = await response.data ;
+      if (data.countInStock === 0) {
+        setIsDisabled(true);
       }
-      const data = await response.json();
       setProducts(data);
       setLoading(false);
     } catch (error) {
@@ -24,9 +27,10 @@ function ViewProduct() {
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {}, [isDisabled]);
   return (
     <>
-      <Navbar isHome={false} name={"Product"} />
+      <Navbar isHome={false} name={"Product Details"} />
       <div className="flex justify-center items-center my-32">
         {loading ? (
           <>
@@ -51,13 +55,17 @@ function ViewProduct() {
                     {products.countInStock}
                   </div>
                   <div className="font-medium my-4 text-xl">
-                  <span className="font-bold">Price :</span>{" "}
-                    ${products.price}
+                    <span className="font-bold">Price :</span> ${products.price}
                   </div>
                   <div>
-                    <Link to="/cart">
-                      <button className="btn btn-primary py-2 px-6 text-xl">Add To Cart</button>
-                    </Link>
+                    <div to="/cart">
+                      <button
+                        disabled={isDisabled}
+                        className="btn btn-primary py-2 px-6 text-xl"
+                      >
+                        {isDisabled ? "Out Of Stock" : <Link to="/cart">"Add To Stock"</Link>}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

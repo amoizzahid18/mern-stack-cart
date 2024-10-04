@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import Product from "./Product";
 import { set } from "mongoose";
+import axios from "axios";
 
 const ProductHome = () => {
   const [products, setProducts] = useState([]);
@@ -14,11 +15,10 @@ const ProductHome = () => {
   const [empty, setEmpty] = useState(false);
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/products");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
+      const response = await axios.get("http://localhost:5500/api/products");
+     
+      const data = await response.data;
+      console.log(data)
       if (data == null || data.length === 0) {
         setIsProdPres(false);
         setLoading(false);
@@ -112,7 +112,7 @@ const ProductHome = () => {
             <>
               <div className="text-4xl my-20 font-black ">
                 No Items Matched
-                <span className="text-pink-400">' {query}'</span>
+                <span className="text-pink-400"> '{query}'</span>
               </div>
             </>
           ) : (
