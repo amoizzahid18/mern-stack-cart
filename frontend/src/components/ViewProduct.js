@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 function ViewProduct() {
   const { id } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [updateBadge, setUpdateBadge] = useState(false);
+  const [butLoad, setButLoad] = useState(false);
+
   const fetchData = async () => {
     try {
       const response = await axios.get(
         `http://localhost:5500/api/products/product/${id}`
       );
-     
-      const data = await response.data ;
+
+      const data = response.data;
       if (data.countInStock === 0) {
         setIsDisabled(true);
       }
@@ -24,13 +27,57 @@ function ViewProduct() {
     }
   };
 
+  // const addItemToCart = async () => {
+  //   try {
+  //     await axios.post(
+  //       "http://localhost:5500/api/products/cart",
+  //       {
+  //         product: id,
+  //         quantity: 1,
+  //       }
+  //     );
+  //     setUpdateBadge(true);
+  //     alert("Item Added to Cart Successfully!");
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert("Error adding item to cart");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+
+  // };
+  const addItemToCart = async () => {
+    try {
+      const res = await axios.post("http://localhost:5500/api/products/cart", {
+        product: id,
+        quantity: 1,
+      });
+
+      setUpdateBadge(true);
+      alert("Item Added to Cart Successfully!");
+    } catch (error) {
+      if (error.status === 422) {
+        alert("Not Enough Quantity in the Stock!");
+      } else {
+        console.log(error);
+        alert("Error adding item to cart");
+      }
+    } finally {
+      setButLoad(false);
+    }
+  };
+  //eslint-disable-next-line
   useEffect(() => {
     fetchData();
-  }, []);
-  useEffect(() => {}, [isDisabled]);
+  }, [isDisabled, updateBadge]);
+
   return (
     <>
-      <Navbar isHome={false} name={"Product Details"} />
+      <Navbar
+        isHome={false}
+        name={"Product Details"}
+        updateBadge={updateBadge}
+      />
       <div className="flex justify-center items-center my-32">
         {loading ? (
           <>
@@ -44,6 +91,7 @@ function ViewProduct() {
             <div className="hero max-w-screen-xl ">
               <div className="hero-content flex-col lg:flex-row">
                 <img
+                  alt={products.name}
                   src={products.imageURL}
                   className="max-w-sm mx-10 rounded-lg drop-shadow-2xl shadow-2xl "
                 />
@@ -58,12 +106,24 @@ function ViewProduct() {
                     <span className="font-bold">Price :</span> ${products.price}
                   </div>
                   <div>
-                    <div to="/cart">
+                    <div>
                       <button
                         disabled={isDisabled}
                         className="btn btn-primary py-2 px-6 text-xl"
+                        onClick={() => {
+                          addItemToCart();
+                          setButLoad(true);
+                        }}
                       >
-                        {isDisabled ? "Out Of Stock" : <Link to="/cart">"Add To Stock"</Link>}
+                        {butLoad ? (
+                          <>
+                            <span className="loading loading-dots loading-md "></span>
+                          </>
+                        ) : (
+                          <span>
+                            {isDisabled ? "Out Of Stock" : "Add To Cart"}
+                          </span>
+                        )}
                       </button>
                     </div>
                   </div>

@@ -10,58 +10,76 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const [isCartEmpty, setIsCartEmpty] = useState(false);
   const [updCart, setUpdCart] = useState(false);
+  const [emptLoad, setEmptLoad] = useState(false);
   const [butLoad, setButLoad] = useState(false);
   const [price, setPrice] = useState(0);
-  
 
   const getItems = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:5500/api/products/cart",
-        { timeout: 10000 }
+        "http://localhost:5500/api/products/cart"
       );
       const data = await response.data;
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       if (data == null || data.length === 0) {
         setLoading(false);
         setIsCartEmpty(true);
       } else {
         setItems(data);
         setLoading(false);
+        setUpdCart(false);
       }
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      console.error(
+        "There was a problem with the getItems fetch operation in cart :",
+        error
+      );
     }
   };
 
   const deleteCart = async () => {
     try {
-      setButLoad(true);
-      setLoading(true);
+      setEmptLoad(true);
       const res = await axios.delete("http://localhost:5500/api/products/cart");
       if (res) {
-        alert("Checkout Successful!");
-        setButLoad(false);
+        alert("Cart emptied successfully");
         setLoading(false);
+        setUpdCart(true);
+        getItems();
+      }
+    } catch (error) {
+      console.error(error);
+      setEmptLoad(false);
+    }
+  };
+
+  const checkoutCart = async () => {
+    try {
+      setButLoad(true);
+      const res = await axios.delete(
+        "http://localhost:5500/api/products/cart/checkout"
+      );
+      if (res) {
+        alert("Checked out successfully");
+        setButLoad(false);
+        setUpdCart(true);
         getItems();
       }
     } catch (error) {
       console.error(error);
       setLoading(false);
+      setButLoad(false);
     }
   };
 
   const handleUpdateCart = (flag) => {
     setUpdCart(flag); // Update the state based on the value received from CartItem
   };
-  // useEffect(() => {}, [loading]);
+
   useEffect(() => {
     getItems(); // Fetch items again when updCart is set to true
-  }, [updCart === true]);
+  }, [updCart]);
 
   useEffect(() => {
     setPrice(items.reduce((s, i) => s + i.product.price * i.quantity, 0));
@@ -70,10 +88,10 @@ const Cart = () => {
   return (
     <div>
       <Navbar isHome={false} updateBadge={updCart} name={"Cart"} />
-      <div className="flex justify-center items-center my-32 ">
+      <div className="flex justify-center items-center py-16 ">
         {!loading && isCartEmpty ? (
           <>
-            <div className="text-4xl my-20 font-black ">
+            <div className="text-4xl my-20 font-black my-32">
               Your Cart is Empty!{" "}
               <u className="text-pink-400 cursor-pointer">
                 <Link to="/">Add Some</Link>
@@ -81,7 +99,7 @@ const Cart = () => {
             </div>
           </>
         ) : loading && !isCartEmpty ? (
-          <div>
+          <div className="my-32">
             <span className="loading loading-ball loading-lg"></span>
             <span className="loading loading-ball loading-lg"></span>
             <span className="loading loading-ball loading-lg"></span>
@@ -90,8 +108,9 @@ const Cart = () => {
         ) : (
           !loading &&
           !isCartEmpty && (
-            <div className="flex justify-center items-center  w-full  flex-col ">
-              <div className=" rounded-md  w-1/2">
+            <div className=" flex justify-center items-center flex-col w-full">
+              
+              <div className=" rounded-md flex justify-items-center  w-2/5">
                 <table className="table  shadow-xl">
                   <thead className="bg-gray-100">
                     <tr>
@@ -104,42 +123,48 @@ const Cart = () => {
                   </thead>
                   <tbody className="">
                     {items.map((item) => {
-                      return item.product ? (
+                      return (
                         <CartItem
                           key={item._id}
                           _id={item._id}
-                          id={item?.product._id}
-                          name={item?.product.name}
-                          description={item?.product.description}
-                          imageURL={item?.product.imageURL}
-                          quantity={item?.quantity}
-                          price={item?.product.price}
+                          id={item.product._id}
+                          name={item.product.name}
+                          description={item.product.description}
+                          imageURL={item.product.imageURL}
+                          quantity={item.quantity}
+                          price={item.product.price}
                           edit_del={false}
                           setUpdCart={handleUpdateCart}
                         />
-                      ) : (
-                        <></>
                       );
                     })}
                   </tbody>
                 </table>
-                <div className="font-medium  my-20 ">
-                  <div className="flex justify-end">
-                    <button className="cursor-text text-lg py-2 px-6 shadow-md mx-6 btn  rounded-lg bg-gray-100">
-                      Total Amount:{"  " + price}
-                    </button>
-                    <button
-                      className=" text-lg py-2 px-6 mx-6 shadow-md rounded-lg btn btn-ghost hover:bg-pink-300 text-white bg-secondary"
-                      onClick={deleteCart}
-                    >
-                      {!butLoad ? (
-                        "Proceed To Checkout"
-                      ) : (
-                        <span className="loading loading-dots loading-md"></span>
-                      )}
-                    </button>
-                  </div>
+              </div>
+              <div className="font-medium mt-10 mr-10 min-w-full flex justify-end flex-row items-center">
+                <div className="cursor-text text-lg py-3 px-6 shadow-md mx-6  text-nowrap  rounded-lg bg-gray-100">
+                  Total Amount:{" $" + price.toFixed(2)}
                 </div>
+                <button
+                  className=" text-lg py-2 px-6 mx-6 shadow-md rounded-lg btn btn-ghost hover:bg-pink-300 text-white bg-secondary"
+                  onClick={checkoutCart}
+                >
+                  {!butLoad ? (
+                    "Proceed To Checkout"
+                  ) : (
+                    <span className="loading loading-dots loading-md"></span>
+                  )}
+                </button>
+                <button
+                  className=" text-lg py-2 px-6 mx-6 shadow-md rounded-lg btn btn-ghost hover:bg-blue-300 text-white bg-primary"
+                  onClick={deleteCart}
+                >
+                  {!emptLoad ? (
+                    "Empty Cart"
+                  ) : (
+                    <span className="loading loading-dots loading-md"></span>
+                  )}
+                </button>
               </div>
             </div>
           )

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
-import Product from "./Product";
-import { set } from "mongoose";
+import Product from "./Product"; 
 import axios from "axios";
 
 const ProductHome = () => {
@@ -13,12 +12,11 @@ const ProductHome = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [query, setQuery] = useState("");
   const [empty, setEmpty] = useState(false);
+  
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:5500/api/products");
-     
       const data = await response.data;
-      console.log(data)
       if (data == null || data.length === 0) {
         setIsProdPres(false);
         setLoading(false);
@@ -34,7 +32,7 @@ const ProductHome = () => {
   };
   const handleSearch = () => {
     setEmpty(false);
-    if (query.trim() == "") {
+    if (query.trim() === "") {
       setFilteredProducts(products);
     } else {
       const filtered = products.filter((item) =>
@@ -56,7 +54,8 @@ const ProductHome = () => {
   }, [query]);
 
   useEffect(() => {
-    fetchData();
+    if(upBadge)
+      setUpBadge(!upBadge);
   }, [upBadge]);
 
   return (
@@ -117,7 +116,7 @@ const ProductHome = () => {
             </>
           ) : (
             <>
-              <div className=" carousel z-[0] w-5/6  ">
+              <div className=" carousel mt-10 z-[0] w-5/6  ">
                 {filteredProducts.map((product) => {
                   return (
                     <div className="carousel-item m-4  h-auto">

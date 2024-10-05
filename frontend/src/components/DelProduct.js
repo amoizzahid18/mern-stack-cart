@@ -13,23 +13,21 @@ const DelProduct = () => {
   const [query, setQuery] = useState("");
   const [filteredProds, setFilteredProds] = useState([]);
   const [empty, setEmpty] = useState(false);
-  const [error, setError] = useState(false);
   const [product, setProduct] = useState({
     id: "",
     name: "",
     description: "",
-    price: "",
-    countInStock: "",
+    price: 0,
+    countInStock: 0,
     imageURL: "",
   });
 
   const fetchData = async () => {
     try {
       setLoading(true);
+      console.log("entering fetchdata")
       const response = await axios.get("http://localhost:5500/api/products");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      
       const data = await response.data;
       if (data == null || data.length === 0) {
         setIsProdPres(false);
@@ -64,8 +62,8 @@ const DelProduct = () => {
         id: "",
         name: "",
         description: "",
-        price: "",
-        countInStock: "",
+        price: 0,
+        countInStock: 0,
         imageURL: "",
       });
       setShowModel(false);
@@ -79,7 +77,7 @@ const DelProduct = () => {
   };
 
   const handleSearch = () => {
-    if (query.trim() == "") {
+    if (query.trim() === "") {
       setEmpty(false);
       setFilteredProds(products);
     } else {
@@ -94,7 +92,7 @@ const DelProduct = () => {
 
   useEffect(() => {
     fetchData();
-  }, [upProd === true]);
+  }, [upProd]);
   useEffect(() => {
     handleSearch();
   }, [query]);

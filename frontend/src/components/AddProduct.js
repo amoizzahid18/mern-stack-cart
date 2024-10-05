@@ -7,8 +7,8 @@ const AddProduct = () => {
   const [product, setProduct] = useState({
     name: "",
     description: "",
-    price: "",
-    countInStock: "",
+    price: 0,
+    countInStock: 0,
     imageURL: "",
   });
   const [loading, setLoading] = useState(false);
@@ -32,8 +32,8 @@ const AddProduct = () => {
       setProduct({
         name: "",
         description: "",
-        price: "",
-        countInStock: "",
+        price: 0,
+        countInStock: 0,
         imageURL: "",
       });
       alert("Product added successfully to db");

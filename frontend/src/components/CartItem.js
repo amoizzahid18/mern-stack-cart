@@ -15,39 +15,43 @@ const CartItem = ({
   setProduct,
   setUpdCart,
   setShowModel,
-  setUpProd
+  setUpProd,
+  setGetRemovedCartItem
 }) => {
   const [loading, setLoading] = useState(false);
 
+  
   const removeCartItem = async () => {
     try {
       setLoading(true);
-      const res = await axios.delete(
-        `http://localhost:5000/api/products/cart/${_id}`
-      );
+      console.log('id of cart item', _id , name);
+      await axios.delete(`http://localhost:5500/api/products/cart/item/${_id}`);
+      setUpdCart(true)
+      alert("Item removed successfully");
       setLoading(false);
-      setUpdCart(true);
     } catch (error) {
-      console.log("Error in removing from cart", error);
-      setLoading(false);
+      console.log("Error in removing product from cart", error);
+      setLoading(false); 
     }
-  };
+  }
+
   const deleteProduct = async () => {
     try {
       setLoading(true);
-      const res = await axios.delete(
+      await axios.delete(
         `http://localhost:5000/api/products/delproduct/${id}`
       );
       alert("Product deleted successfully");
       setLoading(false);
       setUpProd(true);
+      setUpdCart(true);
     } catch (error) {
       console.log("Error in deleting product", error);
       setLoading(false);
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [loading]);
   return (
     <>
       <tr id={id} className="">
@@ -55,11 +59,15 @@ const CartItem = ({
           <div className="flex items-center ">
             <div className="avatar">
               <div className="mask mask-squircle h-20 w-20 ">
-                <img src={imageURL} />
+                <img src={imageURL} alt={name} />
               </div>
             </div>
             <div>
-            <Link to={`/product/${id}`}className="font-bold mx-4 text-lg">{name}</Link>
+              <div className="font-bold mx-4 text-center text-lg">
+              <Link to={`/product/${id}`}  className="hover:underline hover:underline-offset-2">
+                {name}
+              </Link>
+              </div>
               <Link to={`/product/${id}`}>
                 <button className="btn btn-ghost mx-6  btn-xs my-2 bg-gray-200">
                   View
@@ -92,10 +100,7 @@ const CartItem = ({
               </button>
               <button
                 className="btn btn-ghost  bg-red-300 px-2 mx-1 py-1"
-                onClick={() => {
-                  deleteProduct();
-                  removeCartItem();
-                }}
+                onClick={deleteProduct}
               >
                 {!loading ? (
                   "Del"

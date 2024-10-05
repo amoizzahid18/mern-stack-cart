@@ -9,9 +9,10 @@ const productRoutes = require("./routes/productRoutes.js");
 
 
 app.use(express.json());
-app.use(cors())
+
 app.use(cors({
     origin: "http://localhost:3000", // Allow only your frontend
+    credentials: true
   }));
 
 
