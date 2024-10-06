@@ -16,31 +16,65 @@ const CartItem = ({
   setUpdCart,
   setShowModel,
   setUpProd,
-  setGetRemovedCartItem
+  setGetRemovedCartItem,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [quantityLoad, setQuantityLoad] = useState(false);
 
-  
   const removeCartItem = async () => {
     try {
       setLoading(true);
-      console.log('id of cart item', _id , name);
       await axios.delete(`http://localhost:5500/api/products/cart/item/${_id}`);
-      setUpdCart(true)
+      setUpdCart(true);
       alert("Item removed successfully");
       setLoading(false);
     } catch (error) {
       console.log("Error in removing product from cart", error);
-      setLoading(false); 
+      setLoading(false);
     }
-  }
+  };
+
+  const minCartItem = async () => {
+    try {
+      setQuantityLoad(true);
+      await axios.delete(
+        `http://localhost:5500/api/products/cart/quantity/${_id}`
+      );
+      setUpdCart(true);
+      alert("Quantity decreased successfully");
+      setQuantityLoad(false);
+    } catch (error) {
+      console.log("Error in decreasing quantity in cart", error);
+      setQuantityLoad(false);
+    }
+  };
+
+  const plusCartItem = async () => {
+    try {
+      setQuantityLoad(true);
+      const res = await axios.post("http://localhost:5500/api/products/cart", {
+        product: id,
+        quantity: 1,
+      });
+
+      setUpdCart(true);
+      alert("Item Added to Cart Successfully!");
+    } catch (error) {
+      if (error.status === 422) {
+        alert("Not Enough Quantity in the Stock!");
+      } else {
+        console.log(error);
+        alert("Error adding item to cart");
+      }
+    } finally {
+      setQuantityLoad(false);
+    }
+  };
 
   const deleteProduct = async () => {
     try {
       setLoading(true);
-      await axios.delete(
-        `http://localhost:5000/api/products/delproduct/${id}`
-      );
+      await axios.delete(`http://localhost:5000/api/products/delproduct/${id}`);
       alert("Product deleted successfully");
       setLoading(false);
       setUpProd(true);
@@ -64,9 +98,12 @@ const CartItem = ({
             </div>
             <div>
               <div className="font-bold mx-4 text-center text-lg">
-              <Link to={`/product/${id}`}  className="hover:underline hover:underline-offset-2">
-                {name}
-              </Link>
+                <Link
+                  to={`/product/${id}`}
+                  className="hover:underline hover:underline-offset-2"
+                >
+                  {name}
+                </Link>
               </div>
               <Link to={`/product/${id}`}>
                 <button className="btn btn-ghost mx-6  btn-xs my-2 bg-gray-200">
@@ -77,8 +114,36 @@ const CartItem = ({
           </div>
         </td>
         <td className="">{description}</td>
-        <td>{quantity}</td>
-        <td>${price}</td>
+        <td className="text-lg">
+          {!edit_del ? (
+            <div className="  w-28  flex justify-center items-center p-0 text-lg shadow-md  text-nowrap text-center rounded-lg bg-gray-100">
+              {quantityLoad ? (
+                <>
+                  <span className="loading loading-dots loading-md my-3"></span>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={minCartItem}
+                    className="btn btn-ghost py-2 px-3 text-xl text-center  "
+                  >
+                    -
+                  </button>
+                  <div className="cursor-text p-3">{quantity}</div>
+                  <button
+                    onClick={plusCartItem}
+                    className="btn btn-ghost py-2 px-3 text-xl text-center "
+                  >
+                    +
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <>{quantity}</>
+          )}
+        </td>
+        <td className="text-lg">${price}</td>
         {edit_del && (
           <>
             <td className="flex flex-row">

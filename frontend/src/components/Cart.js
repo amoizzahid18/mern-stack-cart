@@ -91,7 +91,7 @@ const Cart = () => {
       <div className="flex justify-center items-center py-16 ">
         {!loading && isCartEmpty ? (
           <>
-            <div className="text-4xl my-20 font-black my-32">
+            <div className="text-4xl  font-black my-32">
               Your Cart is Empty!{" "}
               <u className="text-pink-400 cursor-pointer">
                 <Link to="/">Add Some</Link>
@@ -109,9 +109,8 @@ const Cart = () => {
           !loading &&
           !isCartEmpty && (
             <div className=" flex justify-center items-center flex-col w-full">
-              
-              <div className=" rounded-md flex justify-items-center  w-2/5">
-                <table className="table  shadow-xl">
+              <div className=" rounded-md flex justify-items-center  w-3/5">
+                <table className="table  text-center shadow-xl">
                   <thead className="bg-gray-100">
                     <tr>
                       <th className="text-lg text-gray-700">Name</th>

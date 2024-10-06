@@ -25,9 +25,9 @@ const DelProduct = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      console.log("entering fetchdata")
+      console.log("entering fetchdata");
       const response = await axios.get("http://localhost:5500/api/products");
-      
+
       const data = await response.data;
       if (data == null || data.length === 0) {
         setIsProdPres(false);
@@ -134,7 +134,7 @@ const DelProduct = () => {
                     </div>
                   </>
                 ) : (
-                  <table className="rounded-md table  shadow-xl">
+                  <table className="rounded-md text-center table  shadow-xl">
                     <thead className="bg-gray-100">
                       <tr>
                         <th className="text-lg text-gray-700">Name</th>

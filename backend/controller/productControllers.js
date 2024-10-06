@@ -39,7 +39,6 @@ const putCartItem = async (req, res) => {
       const existingCartItem = await Cart.findOne({ product }).populate(
         "product"
       );
-      
 
       if (existingCartItem) {
         // If it exists, update the quantity
@@ -48,12 +47,12 @@ const putCartItem = async (req, res) => {
           existingCartItem.quantity += quantity; // Increase the quantity in cart
           await existingCartItem.save();
           return res.status(200).json(existingCartItem);
-        } else { 
+        } else {
           return res
             .status(422)
             .json({ message: "Not Enough Quantity in the Stock " });
         }
-        }
+      }
       // If it does not exist, create a new item
       const newItem = new Cart({ product, quantity });
       await newItem.save();
@@ -139,7 +138,7 @@ const updateProduct = async (req, res) => {
 };
 
 // To remove a product from cart
-const removeCartItem = async (req, res) => {
+const minCartItem = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -161,6 +160,29 @@ const removeCartItem = async (req, res) => {
         .status(200)
         .json({ message: "Product removed from cart successfully" });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error removing the product from cart" });
+  }
+};
+
+// To remove a product from cart
+const removeCartItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // const item = await Cart.findByIdAndDelete(id);
+    let item = await Cart.findById(id);
+    if (!item) {
+      return res
+        .status(404)
+        .json({ message: "Product not found for removing from cart" });
+    }
+
+    await Cart.deleteOne({ _id: item.id });
+    return res
+      .status(200)
+      .json({ message: "Product removed from cart successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error removing the product from cart" });
@@ -272,6 +294,7 @@ module.exports = {
   addProduct,
   updateProduct,
   removeCartItem,
+  minCartItem,
   deleteProduct,
   deleteCart,
   getTotalCartItems,

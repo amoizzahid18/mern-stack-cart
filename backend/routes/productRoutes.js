@@ -8,10 +8,11 @@ const {
   addProduct,
   updateProduct,
   removeCartItem,
+  minCartItem,
   deleteProduct,
   deleteCart,
   getTotalCartItems,
-  checkoutCart
+  checkoutCart,
 } = require("../controller/productControllers");
 
 //get all products from db
@@ -35,11 +36,14 @@ router.get("/cart", getCartItems);
 //post item to cart
 router.post("/cart", putCartItem);
 
-//get total quantity cart items 
+//get total quantity cart items
 router.get("/cart/quantity", getTotalCartItems);
 
 //checkout cart
 router.delete("/cart/checkout", checkoutCart);
+
+//decrease quantity from cart
+router.delete("/cart/quantity/:id", minCartItem);
 
 //remove from cart
 router.delete("/cart/item/:id", removeCartItem);
