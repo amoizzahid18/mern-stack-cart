@@ -5,7 +5,7 @@
         product: {
             type: mongoose.Schema.Types.ObjectId, // Reference to Product model
             ref: 'Product',
-            required: true
+            required: true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
         },
         quantity: {
             type: Number,

@@ -125,7 +125,7 @@ const CartItem = ({
                 <>
                   <button
                     onClick={minCartItem}
-                    className="btn btn-ghost py-2 px-3 text-xl text-center  "
+                    className="btn btn-ghost py-2 px-3 text-xl text-center "
                   >
                     -
                   </button>
