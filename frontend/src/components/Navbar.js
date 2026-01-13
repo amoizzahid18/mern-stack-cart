@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "./api";
 
 const Navbar = ({ isHome, isProdPres, updateBadge, name, setQuery }) => {
   const [totalItems, setTotalItems] = useState(0);
@@ -14,8 +14,8 @@ const Navbar = ({ isHome, isProdPres, updateBadge, name, setQuery }) => {
 
   const fetchTotalItems = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5500/api/products/cart/quantity"
+      const response = await api.get(
+        "/api/products/cart/quantity"
       );
       setTotalItems(response.data.totalCount);
     } catch (error) {

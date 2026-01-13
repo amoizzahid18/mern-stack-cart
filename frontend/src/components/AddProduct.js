@@ -1,7 +1,6 @@
-import React from "react";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 import { useState, useEffect } from "react";
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -24,8 +23,8 @@ const AddProduct = () => {
     try {
       e.preventDefault();
       setLoading(true);
-      await axios.post(
-        "http://localhost:5500/api/products/addproduct",
+      await api.post(
+        "/api/products/addproduct",
         product
       );
       setLoading(false);

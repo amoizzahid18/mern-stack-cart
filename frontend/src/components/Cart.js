@@ -1,9 +1,8 @@
-import React from "react";
 import Navbar from "./Navbar";
 import CartItem from "./CartItem";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -17,8 +16,8 @@ const Cart = () => {
   const getItems = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        "http://localhost:5500/api/products/cart"
+      const response = await api.get(
+        "/api/products/cart"
       );
       const data = await response.data;
 
@@ -41,7 +40,7 @@ const Cart = () => {
   const deleteCart = async () => {
     try {
       setEmptLoad(true);
-      const res = await axios.delete("http://localhost:5500/api/products/cart");
+      const res = await api.delete("/api/products/cart");
       if (res) {
         alert("Cart emptied successfully");
         setLoading(false);
@@ -57,8 +56,8 @@ const Cart = () => {
   const checkoutCart = async () => {
     try {
       setButLoad(true);
-      const res = await axios.delete(
-        "http://localhost:5500/api/products/cart/checkout"
+      const res = await api.delete(
+        "/api/products/cart/checkout"
       );
       if (res) {
         alert("Checked out successfully");

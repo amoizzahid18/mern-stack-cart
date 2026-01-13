@@ -1,6 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 import { useState, useEffect } from "react";
 
 const Product = ({
@@ -18,7 +17,7 @@ const Product = ({
   const addItemToCart = async () => {
     try {
       
-      const res = await axios.post("http://localhost:5500/api/products/cart", {
+      const res = await api.post("/api/products/cart", {
         product: id,
         quantity: 1,
       });

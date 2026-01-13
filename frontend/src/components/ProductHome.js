@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import Product from "./Product"; 
-import axios from "axios";
+import api from "./api";
 
 const ProductHome = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +14,7 @@ const ProductHome = () => {
   
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/api/products");
+      const response = await api.get("/api/products");
       const data = await response.data;
       if (data == null || data.length === 0) {
         setIsProdPres(false);

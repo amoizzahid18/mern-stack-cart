@@ -1,9 +1,8 @@
-import React from "react";
 import Navbar from "./Navbar";
 import CartItem from "./CartItem";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 const DelProduct = () => {
   const [products, setProducts] = useState();
   const [loading, setLoading] = useState(true);
@@ -26,7 +25,7 @@ const DelProduct = () => {
     try {
       setLoading(true);
       console.log("entering fetchdata");
-      const response = await axios.get("http://localhost:5500/api/products");
+      const response = await api.get("/api/products");
 
       const data = await response.data;
       if (data == null || data.length === 0) {
@@ -53,8 +52,8 @@ const DelProduct = () => {
     try {
       e.preventDefault();
       setLoading(true);
-      await axios.put(
-        `http://localhost:5500/api/products/product/${product.id}`,
+      await api.put(
+        `/api/products/product/${product.id}`,
         product
       );
       alert("Product edited successfully");

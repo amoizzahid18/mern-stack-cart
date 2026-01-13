@@ -1,8 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
-
+import api from "./api";
 const CartItem = ({
   _id,
   id,
@@ -24,7 +22,7 @@ const CartItem = ({
   const removeCartItem = async () => {
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:5500/api/products/cart/item/${_id}`);
+      await api.delete(`/api/products/cart/item/${_id}`);
       setUpdCart(true);
       alert("Item removed successfully");
       setLoading(false);
@@ -37,8 +35,8 @@ const CartItem = ({
   const minCartItem = async () => {
     try {
       setQuantityLoad(true);
-      await axios.delete(
-        `http://localhost:5500/api/products/cart/quantity/${_id}`
+      await api.delete(
+        `/api/products/cart/quantity/${_id}`
       );
       setUpdCart(true);
       alert("Quantity decreased successfully");
@@ -52,7 +50,7 @@ const CartItem = ({
   const plusCartItem = async () => {
     try {
       setQuantityLoad(true);
-      const res = await axios.post("http://localhost:5500/api/products/cart", {
+      const res = await api.post("/api/products/cart", {
         product: id,
         quantity: 1,
       });
@@ -74,7 +72,7 @@ const CartItem = ({
   const deleteProduct = async () => {
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:5000/api/products/delproduct/${id}`);
+      await api.delete(`/api/products/delproduct/${id}`);
       alert("Product deleted successfully");
       setLoading(false);
       setUpProd(true);

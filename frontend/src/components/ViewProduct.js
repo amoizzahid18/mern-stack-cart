@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 function ViewProduct() {
   const { id } = useParams();
   const [products, setProducts] = useState([]);
@@ -12,8 +12,8 @@ function ViewProduct() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5500/api/products/product/${id}`
+      const response = await api.get(
+        `/api/products/product/${id}`
       );
 
       const data = response.data;
@@ -29,8 +29,8 @@ function ViewProduct() {
 
   // const addItemToCart = async () => {
   //   try {
-  //     await axios.post(
-  //       "http://localhost:5500/api/products/cart",
+  //     await api.post(
+  //       "/api/products/cart",
   //       {
   //         product: id,
   //         quantity: 1,
@@ -48,7 +48,7 @@ function ViewProduct() {
   // };
   const addItemToCart = async () => {
     try {
-      const res = await axios.post("http://localhost:5500/api/products/cart", {
+      const res = await api.post("/api/products/cart", {
         product: id,
         quantity: 1,
       });
